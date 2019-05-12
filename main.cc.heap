@@ -1,0 +1,151 @@
+#include <iostream>
+#include <string>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <ostream>
+#include <fstream>
+
+#include "DBFile.h"
+#include "File.h"
+#include "Schema.h"
+#include "Config.h"
+
+#include "Catalog.h"
+//#include "QueryParser.h"
+#include "QueryOptimizer.h"
+#include "QueryCompiler.h"
+#include "RelOp.h"
+
+using namespace std;
+
+extern "C"{
+#include "QueryParser.h"
+}
+
+// these data structures hold the result of the parsing
+extern struct FuncOperator* finalFunction; // the aggregate function
+extern struct TableList* tables; // the list of tables in the query
+extern struct AndList* predicate; // the predicate in WHERE
+extern struct NameList* groupingAtts; // grouping attributes
+extern struct NameList* attsToSelect; // the attributes in SELECT
+extern int distinctAtts; // 1 if there is a DISTINCT in a non-aggregate query
+
+extern "C" int yyparse();
+extern "C" int yylex_destroy();
+
+
+int main () {
+    cout<<"Press 0 : Convert tbl to heap, 1: Convert heap to txt."<<endl;
+
+    int input;cin>>input;
+	string _tblname,heapfileName,tblfileName;
+
+	string dbFileName = "catalog.sqlite";
+    Catalog catalog(dbFileName);
+
+    switch (input){
+        case 0:
+		{
+            cout<<"USAGE [TABLE NAME]SPACE[HEAP FILE NAME]SPACE[.tbl FILE NAME] "<<endl;
+
+            cin>>_tblname>>heapfileName>>tblfileName;
+
+            string heapdefaultPath="/home/ad26/Projects/Class-Projects/Database-Implementation/Project-3/Not-Working/Query-Compiller/heap_files/";
+            string tbldefaultPath="/home/ad26/Projects/Class-Projects/Database-Implementation/Project-3/Not-Working/Query-Compiller/tbl_files/";
+
+            bool check= true;
+            if(check)
+            {
+                string dbFileName = "catalog.sqlite";
+                Catalog catalog(dbFileName);
+
+
+                // Getting the table name
+				//string tblName=argv[1];
+                string tblName=_tblname;
+                // Getting the heapfile location and convert it to c_String
+				//string t_heapFileLocation=argv[2];
+                string t_heapFileLocation=heapdefaultPath+heapfileName;
+                char * heapFileLocation= new char[t_heapFileLocation.size()+1];
+                std::strcpy(heapFileLocation,t_heapFileLocation.c_str());
+
+                //Getting the .tbl file location and convert it to c_string
+				//string t_tblFileLocation=argv[3];
+                string t_tblFileLocation=tbldefaultPath+tblfileName;
+                char * tblFileLocation=new char[t_tblFileLocation.size()+1];
+                std::strcpy(tblFileLocation,t_tblFileLocation.c_str());
+
+                // Getting schema of the table from catalog
+                Schema schema;
+                catalog.GetSchema(tblName,schema);
+
+                // Using DBFile methods to loading the text data into heap
+                DBFile dbFile;
+                dbFile.Create(heapFileLocation,Heap);
+                dbFile.Load(schema,tblFileLocation);
+
+                // Setting the table location to heapfile location in database
+                catalog.SetDataFile(tblName,t_heapFileLocation);
+
+                dbFile.Close();
+                catalog.Save();
+            }
+		}
+			break;
+        case 1:
+            {
+				cout<<"USAGE [TABLE NAME]SPACE[HEAP FILE NAME]"<<endl;
+            	cin>>_tblname>>heapfileName;
+
+				string heapdefaultPath="/home/ad26/Projects/Class-Projects/Database-Implementation/Project-3/Not-Working/Query-Compiller/heap_files/";
+            	
+				string t_heapfileLocation = heapdefaultPath+heapfileName;
+				char * heapfileLocation=new char[t_heapfileLocation.size()+1];
+				strcpy(heapfileLocation,t_heapfileLocation.c_str());
+
+				// char * file_location=heapfileLocation;
+
+				Schema schema;
+				catalog.GetSchema(_tblname,schema);
+
+                cout<<"Printing Schema"<<endl;
+                cout<<schema<<endl;
+
+				DBFile dbfile;
+				dbfile.Open(heapfileLocation);
+
+//				FILE * fptr;
+//				fptr=fopen(heapfileLocation,"r");
+//				char r;
+//				r=fgetc(fptr);
+//				while(fptr!=NULL)
+//                {
+//				    printf("%c",r);
+//				    r=fgetc(fptr);
+//                }
+//
+//				if(feof(fptr)) cout<<"Reached EOF"<<endl;
+//				else cout<<"Something went wrong"<<endl;
+
+				while ( true)
+                {
+                    Record record;
+                    if(dbfile.GetNext(record)){
+
+                        record.print(cout,schema);
+                        cout<<endl;
+                    }
+                    else break;
+                }
+				
+			}
+			break;
+		default:
+			cout<<"Input invalid"<<endl;
+    }
+
+
+
+	return 0;
+}
