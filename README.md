@@ -1,18 +1,18 @@
 # Database_Implementation
-The project aims at design and Implementation of a relational database. Which includes Implementing below database components : 
-a) Database Catalog. 
-b) Query Compiler. 
-c) Query Optimizer. 
-d) Data Loader and Executor. 
-e) Operator Implemented:
-    i) Select
-    ii) Project
-    iii) Join (Nested Loop Join, Hash Join, Sym-metric Hash Join)
-    iv) Duplicate Removal
-    v) Sum
-    vi) Group By
+The project aims at design and Implementation of a relational database. Which includes Implementing below database components :  
+a) Database Catalog  
+b) Query Compiler.  
+c) Query Optimizer.   
+d) Data Loader and Executor.   
+e) Operator Implemented:  
+    i) Select  
+    ii) Project  
+    iii) Join (Nested Loop Join, Hash Join, Sym-metric Hash Join)  
+    iv) Duplicate Removal  
+    v) Sum  
+    vi) Group By  
 
-Initial structure for the project was supplied by Instructor.
+Initial structure for the project was supplied by Instructor.  
 
 My Contribution :
   1) Implementing methods for operators.
