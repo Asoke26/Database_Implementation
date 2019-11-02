@@ -1,3 +1,4 @@
+<pre>
 # Database_Implementation
 The project aims at design and Implementation of a relational database. Which includes Implementing below database components :  
 a) Database Catalog  
@@ -24,3 +25,4 @@ My Contribution :
       ii) LOAD DATA table-nameFROMtext-file
       iii) SELECT * FROM table-name
       iv) SELECT COUNT(*) FROM table-name
+</pre>
