@@ -21,8 +21,8 @@ My Contribution :
   3) Implementing Joining Algorithm blocking and non-blocking.
   4) Develop commandline interface for database.
   5) Modify Parser to support below commands:
-      i) CREATE TABLE table-name(att1type1,att2type2, ...)
-      ii) LOAD DATA table-nameFROMtext-file
-      iii) SELECT * FROM table-name
-      iv) SELECT COUNT(*) FROM table-name
+      * CREATE TABLE table-name(att1type1,att2type2, ...)
+      * LOAD DATA table-nameFROMtext-file
+      * SELECT * FROM table-name
+      * SELECT COUNT(*) FROM table-name
 
